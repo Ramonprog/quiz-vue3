@@ -1,24 +1,46 @@
 <script setup>
 import BackgroundComponent from "./component/Background.vue";
 import TriviaQuestion from "./component/TriviaQuestion.vue";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import TriviaButtons from "./component/TriviaButtons.vue";
 
 const question = ref("Quantos dias tem um ano?");
 
 const answers = ref(["value 1", "value 2", "value 3", "value 4"]);
 
-const selectedAnswer = (answer) => {
-  console.log(answer);
+const selelectedAnswer = ref(null);
+
+const correctAnswer = ref("value 1");
+
+const select = (answer) => {
+  selelectedAnswer.value = answer;
 };
+
+const informationText = computed(() => {
+  if (selelectedAnswer.value == null) {
+    return "Escolha uma resposta";
+  }
+
+  if (selelectedAnswer.value == correctAnswer.value) {
+    return "Deu bom";
+  } else {
+    return "Deu ruim";
+  }
+});
 </script>
 
 <template>
   <BackgroundComponent>
     <div class="container">
       <div class="mainContent">
-        <TriviaQuestion :question="question" />
-        <TriviaButtons :answers="answers" @selectedAnswer="selectedAnswer" />
+        {{ informationText }}
+        <div v-if="!selelectedAnswer">
+          <TriviaQuestion :question="question" />
+          <TriviaButtons :answers="answers" @selectedAnswer="select" />
+        </div>
+        <div v-else>
+          <button @click="selelectedAnswer = null">tentar novamente</button>
+        </div>
       </div>
     </div>
   </BackgroundComponent>
