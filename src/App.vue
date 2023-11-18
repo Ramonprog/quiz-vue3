@@ -2,44 +2,57 @@
 import BackgroundComponent from "./component/Background.vue";
 import TriviaQuestion from "./component/TriviaQuestion.vue";
 import { ref, computed } from "vue";
-import TriviaButtons from "./component/TriviaButtons.vue";
+import TriviaAnswers from "./component/TriviaAnswers.vue";
+import TriviaResults from "./component/TriviaResults.vue";
 
-const question = ref("Quantos dias tem um ano?");
+const questions = ref(null);
+const currentQuestion = ref(0);
+const correctAnswers = ref([]);
 
-const answers = ref(["value 1", "value 2", "value 3", "value 4"]);
+const computedQuestion = computed(() => {
+  if (questions.value) {
+    return questions.value[currentQuestion.value];
+  }
+  return null;
+});
 
-const selelectedAnswer = ref(null);
+const validateAnswer = (answer) => {
+  if (answer === computedQuestion.value.answer) {
+    correctAnswers.value.push(answer);
+  }
 
-const correctAnswer = ref("value 1");
-
-const select = (answer) => {
-  selelectedAnswer.value = answer;
+  currentQuestion.value = currentQuestion.value + 1;
 };
 
-const informationText = computed(() => {
-  if (selelectedAnswer.value == null) {
-    return "Escolha uma resposta";
-  }
-
-  if (selelectedAnswer.value == correctAnswer.value) {
-    return "Deu bom";
-  } else {
-    return "Deu ruim";
-  }
-});
+fetch("https://simple-trivia.up.railway.app")
+  .then((response) => response.json())
+  .then((data) => {
+    if (data) {
+      questions.value = data;
+    } else {
+      console.error("Dados da API são nulos ou inválidos.");
+    }
+  });
 </script>
 
 <template>
   <BackgroundComponent>
     <div class="container">
       <div class="mainContent">
-        {{ informationText }}
-        <div v-if="!selelectedAnswer">
-          <TriviaQuestion :question="question" />
-          <TriviaButtons :answers="answers" @selectedAnswer="select" />
-        </div>
-        <div v-else>
-          <button @click="selelectedAnswer = null">tentar novamente</button>
+        <div>
+          <TriviaQuestion
+            v-if="computedQuestion"
+            :question="computedQuestion"
+            @answer="validateAnswer"
+          />
+
+          <TriviaResults
+            v-else
+            :correctAnswersTotal="correctAnswers?.length"
+            :questionsTotall="questions?.length"
+          />
+
+          <TriviaAnswers :correct-answers="correctAnswers" />
         </div>
       </div>
     </div>
@@ -58,13 +71,15 @@ const informationText = computed(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 10px;
 }
 .mainContent {
-  width: 700px;
+  width: 800px;
   background-color: #fafafa;
-  min-height: 400px;
+  min-height: 300px;
   border-radius: 8px;
   z-index: 1;
   text-align: center;
+  padding: 20px;
 }
 </style>

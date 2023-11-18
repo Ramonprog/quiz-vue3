@@ -1,14 +1,6 @@
-<script setup>
-defineProps({
-  answers: [String],
-});
-
-const emit = defineEmits(["selectedAnswer"]);
-</script>
-
 <template>
-  <button v-for="answer in answers" @click="emit('selectedAnswer', answer)">
-    {{ answer }}
+  <button>
+    <slot />
   </button>
 </template>
 
@@ -16,7 +8,7 @@ const emit = defineEmits(["selectedAnswer"]);
 button {
   all: unset;
   border: 1px solid #181818;
-  width: 85%;
+  width: 90%;
   padding: 3px;
   margin-top: 10px;
   border-radius: 4px;
