@@ -1,24 +1,5 @@
-# quiz-vue3
+# Trivia game
 
-## Project setup
-```
-npm install
-```
+Um jogo de trivia é um desafio de perguntas e respostas, onde os jogadores testam seu conhecimento em diversas categorias respondendo a perguntas. O objetivo é acumular pontos acertando o maior número de perguntas possível. Cada rodada tem 5 pesguntas
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![Imagem do jogo trivia](public/print.png)
